@@ -30,7 +30,7 @@ public class ChatServer_02 {
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("New client connected");
+//                System.out.println("New client connected");
 
                 ClientHandler clientHandler = new ClientHandler(clientSocket, clients);
                 clients.add(clientHandler);
@@ -66,7 +66,7 @@ public class ChatServer_02 {
             try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 String userName = in.readLine();
-//                broadcast(userName + " ket noi");
+                System.out.println(userName + " ket noi");
                 name = userName;
                 if (!connected) {
                     server01Connector = new ServerConnector("localhost", PORT_SERVER_01, "Server 02");
@@ -79,7 +79,9 @@ public class ChatServer_02 {
                     if ("bye".equals(inputLine)) {
                         break;
                     }
-                    String Check_address = inputLine.substring(0, inputLine.lastIndexOf("."));
+                    String Check_address = inputLine.substring(0, inputLine.indexOf("*"));
+                    Check_address = Check_address.substring(Check_address.indexOf("-", 1) + 1, Check_address.lastIndexOf("."));
+                    notifyMonitor("Thong diep da den Server 2", outToMonitor);
                     switch (Check_address) {
                         case "193.24.56":
                             System.out.println("Chuyen den Router 3");
@@ -95,10 +97,10 @@ public class ChatServer_02 {
                             server01Connector.sendMessage(inputLine);
                             break;
                         default:
+                            broadcast("Nhap Sai Dia Chi", false);
                             System.out.println("Nhap Sai Dia Chi");
                             break;
                     }
-                    notifyMonitor("Thong diep da den Server 2", outToMonitor);
                 }
 
                 String left = userName + " has left the chat.";
@@ -113,7 +115,7 @@ public class ChatServer_02 {
         private void broadcast(String message, Boolean out) {
             if (!out) {
                 for (ClientHandler client : clients) {
-                    if (client.name.equals("200.100.10.0")) {
+                    if (client.name.equals("200.100.10.13")) {
                         client.sendMessage(message);
                     }
                 }
