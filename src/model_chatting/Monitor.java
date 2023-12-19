@@ -10,11 +10,11 @@ import java.net.Socket;
 public class Monitor {
 
     private static final int MONITOR_PORT = 2000;
-    private static final int NUM_SERVERS = 4;
+    private static final int NUM_SERVERS = 4; // tổng số server (Router) trong hệ thống mạng
     private static int connectedServers = 0;
 
     public static void main(String[] args) {
-        try ( ServerSocket serverSocket = new ServerSocket(MONITOR_PORT)) {
+        try ( ServerSocket serverSocket = new ServerSocket(MONITOR_PORT)) { // tạo ServerSocket nhận các kết nối từ các Client - Server trong hệ thống
             System.out.println("Monitor is running on port " + MONITOR_PORT);
 
             // Mảng để lưu trữ các kết nối từ các server

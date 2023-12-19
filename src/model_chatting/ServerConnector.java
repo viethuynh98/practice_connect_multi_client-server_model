@@ -12,7 +12,7 @@ public class ServerConnector {
         try {
             this.socket = new Socket(serverAddress, serverPort);
             this.out = new PrintWriter(socket.getOutputStream(), true);
-            out.println(str);
+            out.println(str); // gửi tin nhắn tới Server
         } catch (IOException e) {
             e.printStackTrace();
         }

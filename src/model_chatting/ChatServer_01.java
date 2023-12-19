@@ -15,7 +15,7 @@ public class ChatServer_01 {
     private static final int MONITOR_PORT = 2000;
     private static final int PORT_SERVER_02 = 2002;
     private static final int PORT_SERVER_04 = 2004;
-    private static List<ClientHandler> clients = new ArrayList<>();
+    private static List<ClientHandler> clients = new ArrayList<>(); // danh sách quản lý các Socket kết nối tới Server
     private static Socket monitorSocket;
     private static PrintWriter outToMonitor;
     private static BufferedReader getFromMonitor;
@@ -23,12 +23,13 @@ public class ChatServer_01 {
     private static ServerConnector server04Connector;
 
     public static void main(String[] args) {
-        try ( ServerSocket serverSocket = new ServerSocket(PORT)) {
+        try ( ServerSocket serverSocket = new ServerSocket(PORT)) { // tạo Serversocket nhận các kết nối từ các Client - server khác
             monitorSocket = new Socket("localhost", MONITOR_PORT);
             outToMonitor = new PrintWriter(monitorSocket.getOutputStream(), true);
             getFromMonitor = new BufferedReader(new InputStreamReader(monitorSocket.getInputStream()));
             System.out.println("Server is running on port " + PORT);
             String monitorMessage;
+            // chờ tin nhắn thông báo hoạt động từ Monitor
             while ((monitorMessage = getFromMonitor.readLine()) != null) {
                 if (monitorMessage.equalsIgnoreCase("Connected")) {
                     server02Connector = new ServerConnector("localhost", PORT_SERVER_02, "Server 01");
@@ -51,7 +52,7 @@ public class ChatServer_01 {
         monitorOut.println(message);
     }
 
-    public static class ClientHandler implements Runnable {
+    public static class ClientHandler implements Runnable { // thread
 
         private Socket clientSocket;
         private List<ClientHandler> clients;
@@ -80,17 +81,18 @@ public class ChatServer_01 {
                     if ("bye".equals(inputLine)) {
                         break;
                     }
-                    String Check_address = inputLine.substring(0, inputLine.indexOf("*"));
-                    Check_address = Check_address.substring(Check_address.indexOf("-", 1) + 1, Check_address.lastIndexOf("."));
+                    // 195.192.150.10-200.100.10.13*alo alo alo
+                    String Check_address = inputLine.substring(0, inputLine.indexOf("*")); // 195.192.150.10-200.100.10.13
+                    Check_address = Check_address.substring(Check_address.indexOf("-", 1) + 1, Check_address.lastIndexOf(".")); // 200.100.10
                     notifyMonitor("Thong diep da den Server 1", outToMonitor);
-                    switch (Check_address) {
+                    switch (Check_address) { // 200.100.10
                         case "196.192.6":
                             System.out.println("Chuyen den Router 4");
-                            server04Connector.sendMessage(inputLine);
+                            server04Connector.sendMessage(inputLine); //  // 195.192.150.10-200.100.10.13*alo alo alo
                             break;
                         case "195.192.150":
                             broadcast(inputLine, false);
-                            System.out.println("Chuyen den Host A");
+                            System.out.println("Chuyen den Host A"); //  // 195.192.150.10-200.100.10.13*alo alo alo
                             break;
                         case "200.100.10":
                         case "193.24.56":
@@ -108,7 +110,7 @@ public class ChatServer_01 {
                 String left = userName + " has left the chat.";
                 notifyMonitor(left, outToMonitor);
                 broadcast(userName + " has left the chat.", true);
-                clients.remove(this);
+                clients.remove(this); // loại bỏ Client khỏi danh sách quản lý.
 
             } catch (IOException e) {
             }

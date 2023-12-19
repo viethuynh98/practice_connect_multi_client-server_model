@@ -37,12 +37,13 @@ public class ChatClient_01 {
                             monitorOut.println("Nhap sai dia chi");
                             System.out.println("Nhap sai dia chi");
                         } else {
-                            String address = serverResponse.substring(0, serverResponse.indexOf("-", 1));
+                            // 195.192.150.10-200.100.10.13*alo alo alo
+                            String address = serverResponse.substring(0, serverResponse.indexOf("-", 1)); // 195.192.150.10
                             if (address.equalsIgnoreCase(userName)) {
                                 monitorOut.println("Nhap trung dia chi");
                                 System.out.println("Nhap trung dia chi");
                             } else {
-                                address = Address.checkAddress(address, userName);
+                                address = Address.checkAddress(address, userName); // 195.192.150.10
                                 String content = serverResponse.substring(serverResponse.indexOf("*", 1) + 1, serverResponse.length());
                                 monitorOut.println(address + ": " + content);
 //                        monitorOut.println("Da nhan:" + serverResponse);
@@ -57,13 +58,13 @@ public class ChatClient_01 {
             String userInput;
             while ((userInput = consoleReader.readLine()) != null) {
                 if (!socket.isClosed()) {
-                    userInput = userInput.trim();
+                    userInput = userInput.trim(); // alo alo alo
                     String add = userInput.substring(0, userInput.indexOf("*", 1));
                     add = add.trim();
                     add = Address.checkAddress(userName, add);
                     String content = userInput.substring(userInput.indexOf("*", 1) + 1, userInput.length());
                     monitorOut.println(add + ": " + content);
-                    String sentMsg = userName + "-" + userInput;
+                    String sentMsg = userName + "-" + userInput; // 195.192.150.10-200.100.10.13*alo alo alo
                     out.println(sentMsg);
                     if ("bye".equals(userInput)) {
                         break;
