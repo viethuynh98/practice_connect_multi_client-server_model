@@ -91,7 +91,8 @@ public class ChatServer_04 {
                             server01Connector.sendMessage(inputLine);
                             break;
                         default:
-                            broadcast("Nhap Sai Dia Chi", false);
+                            String returnStr = "false";
+                            broadcast(returnStr, false);
                             System.out.println("Nhap Sai Dia Chi");
                             break;
                     }

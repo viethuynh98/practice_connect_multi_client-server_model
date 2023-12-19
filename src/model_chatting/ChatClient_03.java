@@ -33,12 +33,17 @@ public class ChatClient_03 {
                 try {
                     String serverResponse;
                     while (!socket.isClosed() && (serverResponse = in.readLine()) != null) {
-                        String address = serverResponse.substring(0, serverResponse.indexOf("-", 1));
-                        address = Address.checkAddress(address, userName);
-                        String content = serverResponse.substring(serverResponse.indexOf("*", 1) + 1, serverResponse.length());
-                        monitorOut.println(address + ": " + content);
+                        if (serverResponse.equalsIgnoreCase("false")) {
+                            monitorOut.println("Nhap sai dia chi");
+                            System.out.println("Nhap sai dia chi");
+                        } else {
+                            String address = serverResponse.substring(0, serverResponse.indexOf("-", 1));
+                            address = Address.checkAddress(address, userName);
+                            String content = serverResponse.substring(serverResponse.indexOf("*", 1) + 1, serverResponse.length());
+                            monitorOut.println(address + ": " + content);
 //                        monitorOut.println("Da nhan:" + serverResponse);
-                        System.out.println(address + ": " + content);
+                            System.out.println(address + ": " + content);
+                        }
                     }
                 } catch (IOException e) {
                 }
@@ -47,7 +52,9 @@ public class ChatClient_03 {
             String userInput;
             while ((userInput = consoleReader.readLine()) != null) {
                 if (!socket.isClosed()) {
+                    userInput = userInput.trim();
                     String add = userInput.substring(0, userInput.indexOf("*", 1));
+                    add = add.trim();
                     add = Address.checkAddress(userName, add);
                     String content = userInput.substring(userInput.indexOf("*", 1) + 1, userInput.length());
                     monitorOut.println(add + ": " + content);

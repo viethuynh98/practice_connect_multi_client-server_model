@@ -18,6 +18,7 @@ public class ChatServer_01 {
     private static List<ClientHandler> clients = new ArrayList<>();
     private static Socket monitorSocket;
     private static PrintWriter outToMonitor;
+    private static BufferedReader getFromMonitor;
     private static ServerConnector server02Connector;
     private static ServerConnector server04Connector;
     private static Boolean connected = false;
@@ -26,8 +27,9 @@ public class ChatServer_01 {
         try ( ServerSocket serverSocket = new ServerSocket(PORT)) {
             monitorSocket = new Socket("localhost", MONITOR_PORT);
             outToMonitor = new PrintWriter(monitorSocket.getOutputStream(), true);
+            getFromMonitor = new BufferedReader(new InputStreamReader(monitorSocket.getInputStream()));
+            
             System.out.println("Server is running on port " + PORT);
-
             while (true) {
                 Socket clientSocket = serverSocket.accept();
 //                System.out.println("New client connected");
@@ -97,7 +99,8 @@ public class ChatServer_01 {
                             server02Connector.sendMessage(inputLine);
                             break;
                         default:
-                            broadcast("Nhap Sai Dia Chi", false);
+                            String returnStr = "false";
+                            broadcast(returnStr, false);
                             System.out.println("Nhap Sai Dia Chi");
                             break;
                     }
