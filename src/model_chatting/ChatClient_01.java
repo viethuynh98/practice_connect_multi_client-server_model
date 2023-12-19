@@ -48,7 +48,6 @@ public class ChatClient_01 {
 //                        monitorOut.println("Da nhan:" + serverResponse);
                                 System.out.println(address + ": " + content);
                             }
-
                         }
                     }
                 } catch (IOException e) {
