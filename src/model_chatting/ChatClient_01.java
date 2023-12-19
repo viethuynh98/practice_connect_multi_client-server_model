@@ -38,11 +38,17 @@ public class ChatClient_01 {
                             System.out.println("Nhap sai dia chi");
                         } else {
                             String address = serverResponse.substring(0, serverResponse.indexOf("-", 1));
-                            address = Address.checkAddress(address, userName);
-                            String content = serverResponse.substring(serverResponse.indexOf("*", 1) + 1, serverResponse.length());
-                            monitorOut.println(address + ": " + content);
+                            if (address.equalsIgnoreCase(userName)) {
+                                monitorOut.println("Nhap trung dia chi");
+                                System.out.println("Nhap trung dia chi");
+                            } else {
+                                address = Address.checkAddress(address, userName);
+                                String content = serverResponse.substring(serverResponse.indexOf("*", 1) + 1, serverResponse.length());
+                                monitorOut.println(address + ": " + content);
 //                        monitorOut.println("Da nhan:" + serverResponse);
-                            System.out.println(address + ": " + content);
+                                System.out.println(address + ": " + content);
+                            }
+
                         }
                     }
                 } catch (IOException e) {
