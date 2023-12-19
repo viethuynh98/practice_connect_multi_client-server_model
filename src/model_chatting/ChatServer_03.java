@@ -17,15 +17,22 @@ public class ChatServer_03 {
     private static List<ClientHandler> clients = new ArrayList<>();
     private static Socket monitorSocket;
     private static PrintWriter outToMonitor;
+    private static BufferedReader getFromMonitor;
     private static ServerConnector server02Connector;
-    private static Boolean connected = false;
 
     public static void main(String[] args) {
         try ( ServerSocket serverSocket = new ServerSocket(PORT)) {
             monitorSocket = new Socket("localhost", MONITOR_PORT);
             outToMonitor = new PrintWriter(monitorSocket.getOutputStream(), true);
+            getFromMonitor = new BufferedReader(new InputStreamReader(monitorSocket.getInputStream()));
             System.out.println("Server is running on port " + PORT);
-
+            String monitorMessage;
+            while ((monitorMessage = getFromMonitor.readLine()) != null) {
+                if (monitorMessage.equalsIgnoreCase("Connected")) {
+                    server02Connector = new ServerConnector("localhost", PORT_SERVER_02, "Server 03");
+                    break;
+                }
+            }
             while (true) {
                 Socket clientSocket = serverSocket.accept();
 //                System.out.println("New client connected");
@@ -66,10 +73,10 @@ public class ChatServer_03 {
                 String userName = in.readLine();
                 System.out.println(userName + " ket noi");
                 name = userName;
-                if (!connected) {
-                    server02Connector = new ServerConnector("localhost", PORT_SERVER_02, "Server 03");
-                    connected = true;
-                }
+//                if (!connected) {
+//                    server02Connector = new ServerConnector("localhost", PORT_SERVER_02, "Server 03");
+//                    connected = true;
+//                }
 
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {

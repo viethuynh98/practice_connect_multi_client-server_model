@@ -18,19 +18,26 @@ public class ChatServer_02 {
     private static List<ClientHandler> clients = new ArrayList<>();
     private static Socket monitorSocket;
     private static PrintWriter outToMonitor;
+    private static BufferedReader getFromMonitor;
     private static ServerConnector server01Connector;
     private static ServerConnector server03Connector;
-    private static Boolean connected = false;
 
     public static void main(String[] args) {
         try ( ServerSocket serverSocket = new ServerSocket(PORT)) {
             monitorSocket = new Socket("localhost", MONITOR_PORT);
             outToMonitor = new PrintWriter(monitorSocket.getOutputStream(), true);
+            getFromMonitor = new BufferedReader(new InputStreamReader(monitorSocket.getInputStream()));
             System.out.println("Server is running on port " + PORT);
-
+            String monitorMessage;
+            while ((monitorMessage = getFromMonitor.readLine()) != null) {
+                if (monitorMessage.equalsIgnoreCase("Connected")) {
+                    server01Connector = new ServerConnector("localhost", PORT_SERVER_01, "Server 02");
+                    server03Connector = new ServerConnector("localhost", PORT_SERVER_03, "Server 02");
+                    break;
+                }
+            }
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-//                System.out.println("New client connected");
 
                 ClientHandler clientHandler = new ClientHandler(clientSocket, clients);
                 clients.add(clientHandler);
@@ -68,11 +75,11 @@ public class ChatServer_02 {
                 String userName = in.readLine();
                 System.out.println(userName + " ket noi");
                 name = userName;
-                if (!connected) {
-                    server01Connector = new ServerConnector("localhost", PORT_SERVER_01, "Server 02");
-                    server03Connector = new ServerConnector("localhost", PORT_SERVER_03, "Server 02");
-                    connected = true;
-                }
+//                if (!connected) {
+//                    server01Connector = new ServerConnector("localhost", PORT_SERVER_01, "Server 02");
+//                    server03Connector = new ServerConnector("localhost", PORT_SERVER_03, "Server 02");
+//                    connected = true;
+//                }
 
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
